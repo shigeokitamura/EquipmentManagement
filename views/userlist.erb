@@ -1,0 +1,55 @@
+<% hash = {
+  1 => "B3",
+  2 => "B4",
+  3 => "M1",
+  4 => "M2",
+  5 => "D1",
+  6 => "D2",
+  7 => "D3",
+} %>
+
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="header">
+            <h4 class="title">ユーザ一覧</h4>
+          </div>
+          <div class="content table-responsive table-full-width">
+            <table class="table table-hover table-striped">
+              <thread>
+                <th>メールアドレス</th>
+                <th>学年</th>
+                <th>管理者</th>
+                <th>削除</th>
+              </thread>
+              <% @users.each do |user| %>
+                <tbody>
+                  <tr>
+                    <td><%= user.mail %></td>
+                    <td><%= hash[user.grade] %></td>
+                    <td>
+                      <% if user.isadmin %>
+                        ○
+                      <% end %>
+                    </td>
+                    <td><input type="submit" value="削除" onClick="
+                      if(window.confirm('<%= user.mail %>を本当に削除しますか？')) {
+                        var form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = '/delete_user/<%= user.id %>';
+                        document.body.appendChild(form);
+                        form.submit();
+                      }
+                    "></td>
+                  </tr>
+                </tbody>
+              <% end %>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

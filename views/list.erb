@@ -1,0 +1,62 @@
+<% hash = {
+  "mac" => "Mac",
+  "windows" => "Windows PC",
+  "tablet" => "タブレット・スマートフォン",
+  "projector" => "プロジェクタ",
+  "connector" => "コネクタ・アダプタ",
+  "camera" => "カメラ",
+  "microcomputer" => "マイコン",
+  "others" => "その他"
+} %>
+
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <% @genres.each do |type| %>
+        <div class="col-md-12">
+          <div class="card">
+            <div class="header">
+              <h4 class="title"><%= hash[type] %></h4>
+            </div>
+            <div class="content table-responsive table-full-width">
+              <table class="table table-hover table-striped">
+                <thread>
+                  <th>品名</th>
+                  <th>備品番号</th>
+                  <th>購入日</th>
+                  <th>貸出中</th>
+                  <th>場所/借りている人</th>
+                  <th>写真</th>
+                </thread>
+                <% @contents.each do |content| %>
+                  <% if content.genre == type %>
+                    <tbody>
+                      <tr>
+                        <td><%= content.name %></td>
+                        <td><%= content.number %></td>
+                        <td><%= content.bought %></td>
+                        <td>
+                          <% if content.isout %>
+                          ○
+                          <% end %>
+                        </td>
+                        <td><%= content.place %></td>
+                        <td>
+                          <% if content.img %>
+                            <img src="<%= content.img %>" width=200>
+                          <% else %>
+                            なし
+                          <% end %>
+                        </td>
+                      </tr>
+                    </tbody>
+                  <% end %>
+                <% end %>
+              </table>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

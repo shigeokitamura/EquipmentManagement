@@ -1,0 +1,28 @@
+<h1>編集</h1>
+<form action="/renew/<%= @content.id %>" method="post" enctype="multipart/form-data">
+  <p>品名:<input type="text" name="equipment_name" value="<%= @content.name %>"></p>
+  <p>種類:
+    <select name="genre">
+      <option value="mac">Mac</option>
+      <option value="windows">Windows PC</option>
+      <option value="tablet">タブレット・スマートフォン</option>
+      <option value="projector">プロジェクタ</option>
+      <option value="connector">コネクタ・アダプタ</option>
+      <option value="camera">カメラ</option>
+      <option value="microcomputer">マイコン</option>
+      <option value="others">その他</option>
+    </select>
+  </p>
+  <p>備品番号:<input type="text" name="number" value="<%= @content.number %>"></p>
+  <p>購入日:<input type="text" name="bought" value="<%= @content.bought %>"></p>
+  <p>
+      貸出中:
+      <input type="hidden" name="isout" value="false">
+      <input type="checkbox" name="isout" value="true"
+        <% if @content.isout %>
+          checked="checked"
+        <% end %>
+      ></p>
+  <p>場所:<input type="text" name="place" value="<%= @content.place %>"></p>
+  <p><input type="submit" value="編集完了"></p>
+</form>

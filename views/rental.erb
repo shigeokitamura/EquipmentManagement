@@ -1,0 +1,105 @@
+<% hash = {
+  "mac" => "Mac",
+  "windows" => "Windows PC",
+  "tablet" => "タブレット・スマートフォン",
+  "projector" => "プロジェクタ",
+  "connector" => "コネクタ・アダプタ",
+  "camera" => "カメラ",
+  "microcomputer" => "マイコン",
+  "others" => "その他"
+} %>
+
+<% hash_grade = {
+  "1" => "B3",
+  "2" => "B4",
+  "3" => "M1",
+  "4" => "M2",
+  "5" => "D1",
+  "6" => "D2",
+  "7" => "D3",
+} %>
+
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <% @genres.each do |type| %>
+        <div class="col-md-12">
+          <div class="card">
+            <div class="header">
+              <h4 class="title"><%= hash[type] %></h4>
+            </div>
+            <div class="content table-responsive table-full-width">
+              <table class="table table-hover table-striped">
+                <thread>
+                  <th>品名</th>
+                  <th>備品番号</th>
+                  <th>購入日</th>
+                  <th>貸出中</th>
+                  <th>場所/借りている人</th>
+                  <th>写真</th>
+                  <th>借りたい</th>
+                  <th>借りたい人</th>
+                </thread>
+                <% @contents.each do |content| %>
+                  <% if content.genre == type %>
+                    <tbody>
+                      <tr>
+                        <td><%= content.name %></td>
+                        <td><%= content.number %></td>
+                        <td><%= content.bought %></td>
+                        <td>
+                          <% if content.isout %>
+                          ○
+                          <% end %>
+                        </td>
+                        <td><%= content.place %></td>
+                        <td>
+                          <% if content.img %>
+                            <img src="<%= content.img %>" width=100>
+                          <% else %>
+                            なし
+                          <% end %>
+                        </td>
+                        <td><input type="submit" value="借りたい" onClick="
+                          if(window.confirm('<%= content.name %>の貸し出しを希望しますか？')) {
+                            var form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = '/rental_request/<%= content.id %>';
+                            var input_name = document.createElement('input');
+                            input_name.name = 'name';
+                            input_name.value = '<%= User.find(session[:user]).mail %>';
+                            var input_grade = document.createElement('input');
+                            input_grade.name = 'grade';
+                            input_grade.value = '<%= User.find(session[:user]).grade %>';
+                            var input_equipment = document.createElement('input');
+                            input_equipment.name = 'equipment';
+                            input_equipment.value = '<%= content.number %>';
+                            form.appendChild(input_name);
+                            form.appendChild(input_grade);
+                            form.appendChild(input_equipment);
+                            document.body.appendChild(form);
+                            form.submit();
+                          }
+                        "></td>
+                        <td>
+                          <% if Rental.find_by(equipment: content.number) %>
+                            <% rental_lists = Rental.where(equipment: content.number) %>
+                            <% rental_lists.each do |list| %>
+                              <%= list.name %>
+                              （<%= hash_grade[list.grade] %>）
+                              <br>
+                            <% end %>
+                          <% end %>
+                        </td>
+                      </tr>
+                    </tbody>
+                  <% end %>
+                <% end %>
+              </table>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

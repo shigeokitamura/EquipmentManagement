@@ -1,0 +1,97 @@
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="header">
+            <h4 class="title">楽天市場で検索</h4>
+          </div>
+          <div class="content">
+    			  <form action="/purchase" method="get">
+      				<div class="row">
+          			<div class="col-md-12">
+                  <div class="form-group">
+                    <label>キーワード</label>
+                    <input type="text" class="form-control" value="<%= params[:keyword] %>" name="keyword">
+          				</div>
+                </div>
+      				</div>
+      				<div>
+      				  <div class="row">
+        				  <div class="col-md-12">
+                    <div class="form-group">
+          					  <button type="submit" class="btn btn-info btn-fill pull-right">検索</button>
+                    </div>
+                  </div>
+                </div>
+      				</div>
+    			  </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% if params[:keyword] %>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="header">
+              <h4 class="title"><%= params[:keyword] %>の検索結果</h4>
+              <p class="category">　</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <% @items.each do |item| %>
+          <div class="col-md-3">
+            <div class="card">
+              <div class="header">
+                <h6 class="title"><%= item['itemName'] %></h6>
+              </div>
+              <div class="content">
+                <div class="row">
+                  <% if item['imageFlag'] == 1 %>
+                    <% imageUrl = item['mediumImageUrls'][0] %>
+                    <div class="image">
+                      <img src="<%= imageUrl["imageUrl"] %>"/>
+                    </div>
+                  <% else %>
+                    <h1>画像なし</h1>
+                  <% end %>
+                </div>
+                <div class="row">
+                  <h6>¥<%= item['itemPrice'].to_s(:delimited) %>
+                  <input type="submit" value="購入希望" onClick="
+                    if(window.confirm('<%= item['itemName'] %>の購入を希望しますか？')) {
+                      var form = document.createElement('form');
+                      form.method = 'POST';
+                      form.action = '/purchase_request';
+                      var input_name = document.createElement('input');
+                      input_name.name = 'name';
+                      input_name.value = '<%= item['itemName'] %>';
+                      var input_url = document.createElement('input');
+                      input_url.name = 'url';
+                      input_url.value = '<%= item['itemUrl'] %>';
+                      var input_image = document.createElement('input');
+                      input_image.name = 'image';
+                      input_image.value = '<%= imageUrl["imageUrl"] %>';
+                      var input_price = document.createElement('input');
+                      input_price.name = 'price';
+                      input_price.value = '<%= item['itemPrice'] %>';
+                      form.appendChild(input_name);
+                      form.appendChild(input_url);
+                      form.appendChild(input_image);
+                      form.appendChild(input_price);
+                      document.body.appendChild(form);
+                      form.submit();
+                    }
+                  "></h6>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,144 @@
+<% hash = {
+  "mac" => "Mac",
+  "windows" => "Windows PC",
+  "tablet" => "タブレット・スマートフォン",
+  "projector" => "プロジェクタ",
+  "connector" => "コネクタ・アダプタ",
+  "camera" => "カメラ",
+  "microcomputer" => "マイコン",
+  "others" => "その他"
+} %>
+
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="header">
+            <h4 class="title">備品登録</h4>
+          </div>
+          <div class="content">
+            <form action="/new" method="post">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>品名</label>
+                    <input type="text" class="form-control" name="equipment_name">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-7">
+                  <div class="form-group">
+                    <label>種類</label>
+                    <select name="genre" class=form-control>
+                      <option value="mac">Mac</option>
+                      <option value="windows">Windows PC</option>
+                      <option value="tablet">タブレット・スマートフォン</option>
+                      <option value="projector">プロジェクタ</option>
+                      <option value="connector">コネクタ・アダプタ</option>
+                      <option value="camera">カメラ</option>
+                      <option value="microcomputer">マイコン</option>
+                      <option value="others">その他</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-5">
+                  <div class="form-group">
+                    <label>備品番号</label>
+                    <input type="text" class="form-control" name="number">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>購入日</label>
+                    <input type="text" class="form-control" name="bought">
+                  </div>
+                </div>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label>場所</label>
+                    <input type="text" class="form-control" name="place">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>写真</label>
+                    <input type="file" name="file">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <button type="submit" class="btn btn-info btn-fill pull-right">登録</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      
+      <% @genres.each do |type| %>
+        <div class="col-md-12">
+          <div class="card">
+            <div class="header">
+              <h4 class="title"><%= hash[type] %></h4>
+            </div>
+            <div class="content table-responsive table-full-width">
+              <table class="table table-hover table-striped">
+                <thread>
+                  <th>品名</th>
+                  <th>備品番号</th>
+                  <th>購入日</th>
+                  <th>貸出中</th>
+                  <th>場所/借りている人</th>
+                  <th>写真</th>
+                  <th>編集</th>
+                  <th>削除</th>
+                </thread>
+                <% @contents.each do |content| %>
+                  <% if content.genre == type %>
+                    <tbody>
+                      <tr>
+                        <td><%= content.name %></td>
+                        <td><%= content.number %></td>
+                        <td><%= content.bought %></td>
+                        <td>
+                          <% if content.isout %>
+                          ○
+                          <% end %>
+                        </td>
+                        <td><%= content.place %></td>
+                        <td>
+                          <% if content.img %>
+                            <img src="<%= content.img %>" width=100>
+                          <% else %>
+                            なし
+                          <% end %>
+                        </td>
+                        <td><form action="/edit/<%= content.id %>" method="post"><input type="submit" value="編集"></form></td>
+                        <td><input type="submit" value="削除" onClick="
+                          if(window.confirm('<%= content.name %>を本当に削除しますか？')) {
+                            var form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = '/delete/<%= content.id %>';
+                            document.body.appendChild(form);
+                            form.submit();
+                          }
+                        "></td>
+                      </tr>
+                    </tbody>
+                  <% end %>
+                <% end %>
+              </table>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

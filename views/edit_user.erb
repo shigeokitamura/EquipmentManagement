@@ -1,0 +1,17 @@
+<form action="/renew_user/<%= User.find(session[:user]).id %>" method="post">
+    <input type="text" name="mail" value="<%= User.find(session[:user]).mail %>" placeholder="メールアドレス"><br>
+    <select name="grade">
+      <% grade_current = User.find(session[:user]).grade %>
+      <option value="1" <% if grade_current == 1 %>selected<% end %> >B3</option>
+      <option value="2" <% if grade_current == 2 %>selected<% end %> >B4</option>
+      <option value="3" <% if grade_current == 3 %>selected<% end %> >M1</option>
+      <option value="4" <% if grade_current == 4 %>selected<% end %> >M2</option>
+      <option value="5" <% if grade_current == 5 %>selected<% end %> >D1</option>
+      <option value="6" <% if grade_current == 6 %>selected<% end %> >D2</option>
+      <option value="7" <% if grade_current == 7 %>selected<% end %> >D3</option>
+    </select><br>
+    <input type="password" name="password" placeholder="パスワード"><br>
+    <input type="password" name="password_confirmation" placeholder="パスワード（確認）"><br>
+    <!--<input type="file" name="file"><br>-->
+    <input type="submit" value="保存">
+</form>
